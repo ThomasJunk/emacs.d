@@ -157,7 +157,7 @@
 (load-theme 'spacemacs-dark t)
 
 ;; line numbers
-(global-display-line-numbers-mode t)
+(global-linum-mode t)
 
 ;; company mode
 (add-hook 'after-init-hook 'global-company-mode)
