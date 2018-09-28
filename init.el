@@ -31,7 +31,7 @@
  '(delete-selection-mode nil)
  '(package-selected-packages
    (quote
-    (yasnippet-snippets prettier-js indium company-tern tern xref-js2 js2-refactor js2-mode undo-tree go-projectile go-autocomplete origami flycheck-gometalinter flycheck-pyflakes go-mode go-imports ac-R go-snippets helm-go-package go-guru company-go spacemacs-theme auto-org-md markdown-mode flycheck-yamllint yaml-mode hydandata-light-theme tao-theme ripgrep all-the-icons ace-window ag htmlize format-sql helm-projectile discover-my-major flatland-theme helm-swoop moe-theme afternoon-theme ample-theme pyflakes python-pylint python-pep8 company-anaconda anaconda-mode magit org-journal org-bullets org-table-sticky-header yasnippet helm-flycheck flycheck neotree avy autopair company ztree material-theme twilight-theme color-theme-railscasts color-theme-tangotango telephone-line helm))))
+    (markup adoc-mode yasnippet-snippets prettier-js indium company-tern tern xref-js2 js2-refactor js2-mode undo-tree go-projectile go-autocomplete origami flycheck-gometalinter flycheck-pyflakes go-mode go-imports ac-R go-snippets helm-go-package go-guru company-go spacemacs-theme auto-org-md markdown-mode flycheck-yamllint yaml-mode hydandata-light-theme tao-theme ripgrep all-the-icons ace-window ag htmlize format-sql helm-projectile discover-my-major flatland-theme helm-swoop moe-theme afternoon-theme ample-theme pyflakes python-pylint python-pep8 company-anaconda anaconda-mode magit org-journal org-bullets org-table-sticky-header yasnippet helm-flycheck flycheck neotree avy autopair company ztree material-theme twilight-theme color-theme-railscasts color-theme-tangotango telephone-line helm))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -350,5 +350,8 @@
 (require 'prettier-js)
 (add-hook 'js2-mode-hook 'prettier-js-mode)
 (add-hook 'web-mode-hook 'prettier-js-mode)
+
+;; asciidoc
+(require 'adoc-mode)
 
 ;; init.el ends here
