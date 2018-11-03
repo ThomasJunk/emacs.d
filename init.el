@@ -31,7 +31,7 @@
  '(delete-selection-mode nil)
  '(package-selected-packages
    (quote
-    (undo-tree go-projectile go-autocomplete tern-auto-complete origami flycheck-gometalinter flycheck-pyflakes go-mode go-imports ac-R go-snippets helm-go-package go-guru company-go spacemacs-theme auto-org-md markdown-mode flycheck-yamllint yaml-mode hydandata-light-theme tao-theme ripgrep web-beautify tern indium json-mode all-the-icons ace-window ag htmlize format-sql helm-projectile discover-my-major flatland-theme helm-swoop moe-theme afternoon-theme ample-theme pyflakes python-pylint python-pep8 company-anaconda anaconda-mode magit org-journal org-bullets org-table-sticky-header yasnippet helm-flycheck flycheck neotree avy autopair company ztree material-theme twilight-theme color-theme-railscasts color-theme-tangotango telephone-line helm))))
+    (adoc-mode undo-tree go-projectile go-autocomplete tern-auto-complete origami flycheck-gometalinter flycheck-pyflakes go-mode go-imports ac-R go-snippets helm-go-package go-guru company-go spacemacs-theme auto-org-md markdown-mode flycheck-yamllint yaml-mode hydandata-light-theme tao-theme ripgrep web-beautify tern indium json-mode all-the-icons ace-window ag htmlize format-sql helm-projectile discover-my-major flatland-theme helm-swoop moe-theme afternoon-theme ample-theme pyflakes python-pylint python-pep8 company-anaconda anaconda-mode magit org-journal org-bullets org-table-sticky-header yasnippet helm-flycheck flycheck neotree avy autopair company ztree material-theme twilight-theme color-theme-railscasts color-theme-tangotango telephone-line helm))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
