@@ -363,5 +363,12 @@
 ; enables them when using its own functions. Add them globally for use in
 (require 'compile)
 
+;; alias
+(defalias 'yes-or-no-p 'y-or-n-p)
+
+;; column numbers
+(setq column-number-mode t)
+
+
 
 ;; init.el ends here
