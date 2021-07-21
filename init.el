@@ -31,7 +31,7 @@
  '(delete-selection-mode nil)
  '(package-selected-packages
    (quote
-    (adoc-mode undo-tree go-projectile go-autocomplete tern-auto-complete origami flycheck-gometalinter flycheck-pyflakes go-mode go-imports ac-R go-snippets helm-go-package go-guru company-go spacemacs-theme auto-org-md markdown-mode flycheck-yamllint yaml-mode hydandata-light-theme tao-theme ripgrep web-beautify tern indium json-mode all-the-icons ace-window ag htmlize format-sql helm-projectile discover-my-major flatland-theme helm-swoop moe-theme afternoon-theme ample-theme pyflakes python-pylint python-pep8 company-anaconda anaconda-mode magit org-journal org-bullets org-table-sticky-header yasnippet helm-flycheck flycheck neotree avy autopair company ztree material-theme twilight-theme color-theme-railscasts color-theme-tangotango telephone-line helm))))
+    (adoc-mode undo-tree go-projectile go-autocomplete tern-auto-complete origami flycheck-gometalinter flycheck-pyflakes go-mode go-imports ac-R go-snippets helm-go-package go-guru company-go spacemacs-theme auto-org-md markdown-mode flycheck-yamllint yaml-mode hydandata-light-theme tao-theme ripgrep web-beautify tern indium json-mode all-the-icons ace-window ag htmlize format-sql helm-projectile discover-my-major flatland-theme helm-swoop moe-theme afternoon-theme ample-theme pyflakes python-pylint python-pep8 company-anaconda anaconda-mode magit org-journal org-bullets org-table-sticky-header yasnippet helm-flycheck flycheck neotree avy company ztree material-theme twilight-theme color-theme-railscasts color-theme-tangotango telephone-line helm))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -167,11 +167,6 @@
 
 (setq company-dabbrev-downcase 0)
 (setq company-idle-delay 0)
-
-
-;; autopairs
-(require 'autopair)
-(autopair-global-mode) ;; enable autopair in all buffers
 
 ;; avy
 (global-set-key (kbd "C-c SPC") 'avy-goto-char)
@@ -327,41 +322,6 @@
 (require 'go-autocomplete)
 (require 'auto-complete-config)
 (ac-config-default)
-
-(use-package flycheck-gometalinter
-  :ensure t
-  :config
-  (progn
-    (flycheck-gometalinter-setup)))
-(add-hook 'before-save-hook #'gofmt-before-save)
-(add-hook 'go-mode-hook
-          #'(lambda()
-              (require 'go-imports)
-	          (define-key go-mode-map "\C-cI" 'go-imports-insert-import)
-	          (define-key go-mode-map "\C-cR" 'go-imports-reload-packages-list)))
-
-(projectile-global-mode 1)
-(require 'go-projectile)
-(go-projectile-tools-add-path)
-(setq gofmt-command (concat "/home/thomas/go" "/bin/goimports"))
-;; skips 'vendor' directories and sets GO15VENDOREXPERIMENT=1
-(setq flycheck-gometalinter-vendor t)
-;; only show errors
-(setq flycheck-gometalinter-errors-only t)
-;; only run fast linters
-(setq flycheck-gometalinter-fast t)
-;; use in tests files
-(setq flycheck-gometalinter-test t)
-;; disable linters
-(setq flycheck-gometalinter-disable-linters '("gotype" "gocyclo"))
-;; Only enable selected linters
-(setq flycheck-gometalinter-disable-all t)
-(setq flycheck-gometalinter-enable-linters '("golint"))
-;; Set different deadline (default: 5s)
-(setq flycheck-gometalinter-deadline "10s")
-; gotest defines a better set of error regexps for go tests, but it only
-; enables them when using its own functions. Add them globally for use in
-(require 'compile)
 
 ;; alias
 (defalias 'yes-or-no-p 'y-or-n-p)
