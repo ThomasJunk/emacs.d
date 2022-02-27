@@ -60,6 +60,22 @@
 (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
 (setq xref-show-definitions-function #'xref-show-definitions-completing-read)
 
+;;python
+(use-package pyvenv
+  :ensure t
+  :config
+  (pyvenv-mode t)
+
+  ;; Set correct Python interpreter
+  (setq pyvenv-post-activate-hooks
+        (list (lambda ()
+                (setq python-shell-interpreter (concat pyvenv-virtual-env "bin/python3")))))
+  (setq pyvenv-post-deactivate-hooks
+        (list (lambda ()
+                (setq python-shell-interpreter "python3")))))
+
+
+
 ;; go-mode
 ; "company" is auto-completion
 (require 'company)
@@ -72,8 +88,53 @@
 ;;lspmode
 ;; if you want to change prefix for lsp-mode keybindings.
 (setq lsp-keymap-prefix "s-l")
-
 (require 'lsp-mode)
+
+(use-package lsp-mode
+  :config
+  (setq lsp-idle-delay 0.5
+        lsp-enable-symbol-highlighting t
+        lsp-enable-snippet nil  ;; Not supported by company capf, which is the recommended company backend
+        lsp-pyls-plugins-flake8-enabled t)
+  (lsp-register-custom-settings
+   '(("pyls.plugins.pyls_mypy.enabled" t t)
+     ("pyls.plugins.pyls_mypy.live_mode" nil t)
+     ("pyls.plugins.pyls_black.enabled" t t)
+     ("pyls.plugins.pyls_isort.enabled" t t)
+
+     ;; Disable these as they're duplicated by flake8
+     ("pyls.plugins.pycodestyle.enabled" nil t)
+     ("pyls.plugins.mccabe.enabled" nil t)
+     ("pyls.plugins.pyflakes.enabled" nil t)))
+  :hook
+  ((python-mode . lsp)
+   (lsp-mode . lsp-enable-which-key-integration))
+)
+
+
+(use-package lsp-ui
+  :config (setq lsp-ui-sideline-show-hover t
+                lsp-ui-sideline-delay 0.5
+                lsp-ui-doc-delay 5
+                lsp-ui-sideline-ignore-duplicates t
+                lsp-ui-doc-position 'bottom
+                lsp-ui-doc-alignment 'frame
+                lsp-ui-doc-header nil
+                lsp-ui-doc-include-signature t
+                lsp-ui-doc-use-childframe t)
+  :commands lsp-ui-mode
+  :bind (:map evil-normal-state-map
+              ("gd" . lsp-ui-peek-find-definitions)
+              ("gr" . lsp-ui-peek-find-references)
+              :map md/leader-map
+              ("Ni" . lsp-ui-imenu)))
+
+(use-package pyvenv
+  :demand t
+  :config
+  (setq pyvenv-workon "emacs")  ; Default venv
+  (pyvenv-tracking-mode 1))  ; Automatically use pyvenv-workon via dir-locals
+
 (add-hook 'javascript-mode-hook #'lsp)
 
 (lsp-treemacs-sync-mode 1)
@@ -186,11 +247,16 @@
           org-startup-with-inline-images t
           org-image-actual-width '(300))
 
-;;org superstar
-(require 'org-superstar)
-(add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
-
-
+;;ox-pandoc
+;; default options for all output formats
+(setq org-pandoc-options '((standalone . t)))
+;; cancel above settings only for 'docx' format
+(setq org-pandoc-options-for-docx '((standalone . nil)))
+;; special settings for beamer-pdf and latex-pdf exporters
+(setq org-pandoc-options-for-beamer-pdf '((pdf-engine . "xelatex")))
+(setq org-pandoc-options-for-latex-pdf '((pdf-engine . "pdflatex")))
+;; special extensions for markdown_github output
+(setq org-pandoc-format-extensions '(markdown_github+pipe_tables+raw_html))
 
 ;;org roam
 (use-package org-roam
