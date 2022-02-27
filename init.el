@@ -274,6 +274,9 @@
           org-startup-with-inline-images t
           org-image-actual-width '(300))
 
+;; org-mode agendafiles
+(setq org-agenda-files (list "/Users/thomasjunk/Documents/org/slimlist.org"))
+
 ;;ox-pandoc
 ;; default options for all output formats
 (setq org-pandoc-options '((standalone . t)))
