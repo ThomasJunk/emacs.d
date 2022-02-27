@@ -29,6 +29,9 @@
 
   (setq make-backup-files nil)
 
+;; olivetti
+(require 'olivetti)
+
 ;; Autosave on focus change
 (add-hook 'focus-out-hook 'save-buffer)
 
@@ -444,7 +447,7 @@ With WITH-TYPES, ask for file types to search in."
 
 
 ;;spacemacs theme
-  (load-theme 'spacemacs-light t)
+  (load-theme 'spacemacs-dark t)
 
 ;; line numbers
   (global-display-line-numbers-mode t)
