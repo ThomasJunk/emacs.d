@@ -1,53 +1,233 @@
-;;; Emacs config
-(require 'package)
-(add-to-list 'package-archives '("marmalade" . "https://marmalade-repo.org/packages/"))
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
-(add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/"))
-(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
+;; Define the init file
+  (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+  (when (file-exists-p custom-file)
+    (load custom-file))
 
-;; Added by Package.el.  This must come before configurations of
-;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
-;; You may delete these explanatory comments.
-(package-initialize)
+;; Define and initialise package repositories
+  (require 'package)
+  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+  (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/"))
+  (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
+  (add-to-list 'package-archives '("ox-odt" . "https://kjambunathan.github.io/elpa/"))
+  (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
+  (package-initialize)
 
-; fetch the list of packages available
-(unless package-archive-contents
-  (package-refresh-contents))
+  ;; use-package to simplify the config file
+  (unless (package-installed-p 'use-package)
+    (package-refresh-contents)
+    (package-install 'use-package))
+  (require 'use-package)
+  (setq use-package-always-ensure 't)
 
-(setq inhibit-splash-screen t
+  ;; Keyboard-centric user interface
+  (setq inhibit-splash-screen t
       initial-scratch-message nil
       initial-major-mode 'text-mode)
+  (tool-bar-mode -1)
+  (menu-bar-mode -1)
+  (scroll-bar-mode -1)
+  (defalias 'yes-or-no-p 'y-or-n-p)
 
-(setq make-backup-files nil)
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   (quote
-    ("c90fd1c669f260120d32ddd20168343f5c717ca69e95d2f805e42e88430c340e" "a24c5b3c12d147da6cef80938dca1223b7c7f70f2f382b26308eba014dc4833a" "732b807b0543855541743429c9979ebfb363e27ec91e82f463c91e68c772f6e3" "c5a886cc9044d8e6690a60f33db45506221aa0777a82ad1f7fe11a96d203fa44" "b300379af88fdc3acda2bca448bf970a4c6ce6cc0b5099bce3a5d9f070dbdb8c" "086970da368bb95e42fd4ddac3149e84ce5f165e90dfc6ce6baceae30cf581ef" "0e0c37ee89f0213ce31205e9ae8bce1f93c9bcd81b1bcda0233061bb02c357a8" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "a4c9e536d86666d4494ef7f43c84807162d9bd29b0dfd39bdf2c3d845dcc7b2e" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "51e228ffd6c4fff9b5168b31d5927c27734e82ec61f414970fc6bcce23bc140d" "8abee8a14e028101f90a2d314f1b03bed1cde7fd3f1eb945ada6ffc15b1d7d65" "a2e7b508533d46b701ad3b055e7c708323fb110b6676a8be458a758dd8f24e27" "4cbec5d41c8ca9742e7c31cc13d8d4d5a18bd3a0961c18eb56d69972bbcf3071" "28ec8ccf6190f6a73812df9bc91df54ce1d6132f18b4c8fcc85d45298569eb53" "21d9280256d9d3cf79cbcf62c3e7f3f243209e6251b215aede5026e0c5ad853f" "98cc377af705c0f2133bb6d340bf0becd08944a588804ee655809da5d8140de6" "5dc0ae2d193460de979a463b907b4b2c6d2c9c4657b2e9e66b8898d2592e3de5" "6cfe5b2f818c7b52723f3e121d1157cf9d95ed8923dbc1b47f392da80ef7495d" default)))
- '(delete-selection-mode nil)
- '(package-selected-packages
-   (quote
-    (adoc-mode undo-tree go-projectile go-autocomplete tern-auto-complete origami flycheck-gometalinter flycheck-pyflakes go-mode go-imports ac-R go-snippets helm-go-package go-guru company-go spacemacs-theme auto-org-md markdown-mode flycheck-yamllint yaml-mode hydandata-light-theme tao-theme ripgrep web-beautify tern indium json-mode all-the-icons ace-window ag htmlize format-sql helm-projectile discover-my-major flatland-theme helm-swoop moe-theme afternoon-theme ample-theme pyflakes python-pylint python-pep8 company-anaconda anaconda-mode magit org-journal org-bullets org-table-sticky-header yasnippet helm-flycheck flycheck neotree avy company ztree material-theme twilight-theme color-theme-railscasts color-theme-tangotango telephone-line helm))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+  (setq make-backup-files nil)
 
-;;helm configuration
+;; Autosave on focus change
+(add-hook 'focus-out-hook 'save-buffer)
+
+;; all the icons
+(require 'all-the-icons)
+
+;; flycheck
+(package-install 'flycheck)
+
+(global-flycheck-mode)
+(package-install 'exec-path-from-shell)
+(exec-path-from-shell-initialize)
+(add-hook 'after-init-hook #'global-flycheck-mode)
+
+;;dumb jump
+(add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
+(setq xref-show-definitions-function #'xref-show-definitions-completing-read)
+
+;; go-mode
+; "company" is auto-completion
+(require 'company)
+(require 'go-mode)
+(require 'company-go)
+(require 'go-autocomplete)
+(require 'auto-complete-config)
+(ac-config-default)
+
+;;lspmode
+;; if you want to change prefix for lsp-mode keybindings.
+(setq lsp-keymap-prefix "s-l")
+
+(require 'lsp-mode)
+(add-hook 'javascript-mode-hook #'lsp)
+
+(lsp-treemacs-sync-mode 1)
+
+(define-key lsp-mode-map [remap xref-find-apropos] #'helm-lsp-workspace-symbol)
+
+;;yasnippet
+(require 'yasnippet)
+(yas-global-mode 1)
+
+
+;; Discover my major
+(global-set-key (kbd "C-h C-m") 'discover-my-major)
+(global-set-key (kbd "C-h M-m") 'discover-my-mode)
+
+;; set mouse cursor
+;;;; Mouse scrolling in terminal emacs
+(unless (display-graphic-p)
+  ;; activate mouse-based scrolling
+  (xterm-mouse-mode 1)
+  (global-set-key (kbd "<mouse-4>") 'scroll-down-line)
+  (global-set-key (kbd "<mouse-5>") 'scroll-up-line)
+  )	
+
+;; orgami
+(require 'origami)
+(global-origami-mode)
+(global-set-key (kbd "C-c f") 'origami-toggle-node)
+
+;;whichkey
+(use-package which-key
+  :ensure t 
+  :config
+  (which-key-mode))
+
+;; json-mode
+(add-hook 'json-mode-hook
+          (lambda ()
+            (make-local-variable 'js-indent-level)
+            (setq js-indent-level 2)))
+
+;;prettier
+(add-hook 'web-mode-hook 'prettier-js-mode)
+
+(defun enable-minor-mode (my-pair)
+  "Enable minor mode if filename match the regexp.  MY-PAIR is a cons cell (regexp . minor-mode)."
+  (if (buffer-file-name)
+      (if (string-match (car my-pair) buffer-file-name)
+	  (funcall (cdr my-pair)))))
+
+(add-hook 'web-mode-hook #'(lambda ()
+                            (enable-minor-mode
+                             '("\\.jsx?\\'" . prettier-js-mode))))
+
+
+;; neotree
+(require 'neotree)
+(global-set-key [f8] 'neotree-toggle)
+(setq neo-theme (if (display-graphic-p) 'icons 'arrow))
+
+;;auto-complete
+(use-package auto-complete
+  :ensure t)
+
+;;web-mode
+(use-package web-mode
+  :ensure t
+  :config
+  (progn
+    (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+    (setq web-mode-engines-alist
+          '(("django"    . "\\.html\\'")))
+    (setq web-mode-ac-sources-alist
+          '(("css" . (ac-source-css-property))
+            ("html" . (ac-source-words-in-buffer ac-source-abbrev))))
+    (setq web-mode-markup-indent-offset 2)
+    (setq web-mode-code-indent-offset 2)
+    (setq web-mode-css-indent-offset 2)
+    (setq web-mode-enable-current-element-highlight t)
+    (setq web-mode-enable-auto-closing t)
+    (setq web-mode-enable-auto-quoting t)
+    (setq web-mode-enable-auto-pairing t)
+    (setq web-mode-enable-auto-expanding t)
+    (setq web-mode-enable-css-colorization t)))
+
+;; undotree
+(global-undo-tree-mode)
+
+;;projectile
+(use-package projectile
+  :ensure t)
+
+;;org-mode
+;; orgmode config
+(global-set-key "\C-cl" 'org-store-link)
+(global-set-key "\C-ca" 'org-agenda)
+(global-set-key "\C-cc" 'org-capture)
+(global-set-key "\C-cb" 'org-iswitchb)
+(setq org-log-done t)
+(setq org-agenda-files (list "~/org/work.org"
+                             "~/org/shortlist.org" 
+                             "~/org/home.org"))
+
+;;ox-odt
+(require 'ox-odt)
+(setq org-odt-preferred-output-format "docx")
+
+;; Fast TODO Selection
+(setq org-use-fast-todo-selection t)
+
+(setq org-log-done 'time)
+
+(require 'org-journal)
+
+(require 'org-bullets)
+(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+
+;;org-download
+(use-package org-download
+  :ensure t)
+
+;;magit
+(use-package magit
+  :ensure t
+  :config (setq magit-display-buffer-function  ;; Make Magit Fullscreen
+                (lambda (buffer)
+                  (if magit-display-buffer-noselect
+                    ;; the code that called `magit-display-buffer-function'
+                    ;; expects the original window to stay alive, we can't go
+                    ;; fullscreen
+                    (magit-display-buffer-traditional buffer)
+                    (delete-other-windows)
+                    ;; make sure the window isn't dedicated, otherwise
+                    ;; `set-window-buffer' throws an error
+                    (set-window-dedicated-p nil nil)
+                    (set-window-buffer nil buffer)
+                    ;; return buffer's window
+                    (get-buffer-window buffer)))))
+
+(global-set-key "\C-xg" 'magit-status)
+
+;;telephone-line
+  (require 'telephone-line)
+  (setq telephone-line-primary-left-separator 'telephone-line-cubed-left
+        telephone-line-secondary-left-separator 'telephone-line-cubed-hollow-left
+        telephone-line-primary-right-separator 'telephone-line-cubed-right
+        telephone-line-secondary-right-separator 'telephone-line-cubed-hollow-right)
+  (setq telephone-line-height 24
+        telephone-line-evil-use-short-tag t)
+  (telephone-line-mode 1)
+
+;;helm
 (require 'helm)
 (require 'helm-config)
-(global-set-key (kbd "M-x") #'helm-M-x)
-(global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
-(global-set-key (kbd "C-x C-f") #'helm-find-files)
-
+;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
+;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
+;; cannot change `helm-command-prefix-key' once `helm-config' is loaded.
 (global-set-key (kbd "C-c h") 'helm-command-prefix)
 (global-unset-key (kbd "C-x c"))
+(global-set-key (kbd "M-x") 'helm-M-x)
+(setq helm-M-x-fuzzy-match t)
+(global-set-key (kbd "M-y") 'helm-show-kill-ring)
+(global-set-key (kbd "C-x b") 'helm-mini)
+(setq helm-buffers-fuzzy-matching t
+      helm-recentf-fuzzy-match    t)
+(global-set-key (kbd "C-x C-f") 'helm-find-files)
 
 (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
 (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB work in terminal
@@ -63,16 +243,6 @@
       helm-ff-file-name-history-use-recentf t
       helm-echo-input-in-header-line t)
 
-(setq helm-recentf-fuzzy-match t
-      helm-locate-fuzzy-match nil ;; locate fuzzy is worthless
-      helm-M-x-fuzzy-match t
-      helm-buffers-fuzzy-matching t
-      helm-semantic-fuzzy-match t
-      helm-apropos-fuzzy-match t
-      helm-imenu-fuzzy-match t
-      helm-lisp-fuzzy-completion t
-      helm-completion-in-region-fuzzy-match t)
-
 (defun spacemacs//helm-hide-minibuffer-maybe ()
   "Hide minibuffer in Helm session if we use the header line as input field."
   (when (with-helm-buffer helm-echo-input-in-header-line)
@@ -87,14 +257,31 @@
 (add-hook 'helm-minibuffer-set-up-hook
           'spacemacs//helm-hide-minibuffer-maybe)
 
-(setq helm-autoresize-max-height 40)
-(setq helm-autoresize-min-height 40)
+(setq helm-autoresize-max-height 0)
+(setq helm-autoresize-min-height 20)
 (helm-autoresize-mode 1)
+
+(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to do persistent action
+(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
+(define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+
+(setq helm-locate-fuzzy-match t)
+(global-set-key (kbd "C-c h o") 'helm-occur)
+(setq helm-apropos-fuzzy-match t)
+(setq helm-lisp-fuzzy-completion t)
+(global-set-key (kbd "C-c h x") 'helm-register)
+(global-set-key (kbd "C-c h g") 'helm-google-suggest)
+(define-key minibuffer-local-map (kbd "C-c C-l") 'helm-minibuffer-history)
 
 (helm-mode 1)
 
-;; helm-swoop
+;;helm descbinds
+(require 'helm-descbinds)
+(helm-descbinds-mode)
 
+;;helm-swoop
+;; Locate the helm-swoop folder to your path
+(add-to-list 'load-path "~/.emacs.d/elisp/helm-swoop")
 (require 'helm-swoop)
 
 ;; Change the keybinds to whatever you like :)
@@ -126,7 +313,7 @@
 (setq helm-swoop-split-with-multiple-windows nil)
 
 ;; Split direcion. 'split-window-vertically or 'split-window-horizontally
-(setq helm-swoop-split-direction 'split-window-horizontally)
+(setq helm-swoop-split-direction 'split-window-vertically)
 
 ;; If nil, you can slightly boost invoke speed in exchange for text color
 (setq helm-swoop-speed-or-color nil)
@@ -141,23 +328,89 @@
 ;; If you prefer fuzzy matching
 (setq helm-swoop-use-fuzzy-match t)
 
+;; Use search query at the cursor  (default)
+(setq helm-swoop-pre-input-function
+      (lambda () (thing-at-point 'symbol)))
+
+;; Disable pre-input
+(setq helm-swoop-pre-input-function
+      (lambda () ""))
+;; Or, just use M-x helm-swoop-without-pre-input
+
+;; Match only for symbol
+(setq helm-swoop-pre-input-function
+      (lambda () (format "\\_<%s\\_> " (thing-at-point 'symbol))))
+
+;; Always use the previous search for helm. Remember C-<backspace> will delete entire line
+(setq helm-swoop-pre-input-function
+      (lambda () (if (boundp 'helm-swoop-pattern)
+                     helm-swoop-pattern "")))
+
+;; If there is no symbol at the cursor, use the last used words instead.
+(setq helm-swoop-pre-input-function
+      (lambda ()
+        (let (($pre-input (thing-at-point 'symbol)))
+          (if (eq (length $pre-input) 0)
+              helm-swoop-pattern ;; this variable keeps the last used words
+            $pre-input))))
+
+;; If a symbol or phrase is selected, use it as the initial query.
+(setq helm-swoop-pre-input-function
+      (lambda ()
+        (if mark-active
+            (buffer-substring-no-properties (mark) (point))
+          "")))
+
 ;; helm projectile
-(require 'helm-projectile)
-(projectile-global-mode)
-(setq projectile-completion-system 'helm)
-(setq projectile-enable-caching t)
-(helm-projectile-on)
+  (require 'helm-projectile)
+  (projectile-global-mode)
+  (setq projectile-completion-system 'helm)
+  (setq projectile-enable-caching t)
+  (helm-projectile-on)
 
-;; telephone line
+(setq helm-semantic-fuzzy-match t
+      helm-imenu-fuzzy-match    t)
 
-(require 'telephone-line)
-(telephone-line-mode 1)
+;;helm ripgrep
+(setq helm-grep-ag-command (concat "rg"
+                                   " --color=never"
+                                   " --smart-case"
+                                   " --no-heading"
+                                   " --line-number %s %s %s")
+      helm-grep-file-path-style 'relative)
+(defun mu-helm-rg (directory &optional with-types)
+  "Search in DIRECTORY with RG.
+With WITH-TYPES, ask for file types to search in."
+  (interactive "P")
+  (require 'helm-adaptive)
+  (helm-grep-ag-1 (expand-file-name directory)
+                  (helm-aif (and with-types
+                                 (helm-grep-ag-get-types))
+                      (helm-comp-read
+                       "RG type: " it
+                       :must-match t
+                       :marked-candidates t
+                       :fc-transformer 'helm-adaptive-sort
+                       :buffer "*helm rg types*"))))
 
-;;spacemacs theme
-(load-theme 'spacemacs-dark t)
+(defun mu-helm-project-search (&optional with-types)
+  "Search in current project with RG.
+With WITH-TYPES, ask for file types to search in."
+  (interactive "P")
+  (mu-helm-rg (mu--project-root) with-types))
 
-;; line numbers
-(global-display-line-numbers-mode t)
+(defun mu-helm-file-search (&optional with-types)
+  "Search in `default-directory' with RG.
+With WITH-TYPES, ask for file types to search in."
+  (interactive "P")
+  (mu-helm-rg default-directory with-types))
+
+(defun mu--project-root ()
+  "Return the project root directory or `helm-current-directory'."
+  (require 'helm-ls-git)
+  (if-let (dir (helm-ls-git-root-dir))
+      dir
+    (helm-current-directory)))
 
 ;; company mode
 (add-hook 'after-init-hook 'global-company-mode)
@@ -168,167 +421,45 @@
 (setq company-dabbrev-downcase 0)
 (setq company-idle-delay 0)
 
-;; avy
-(global-set-key (kbd "C-c SPC") 'avy-goto-char)
-(global-set-key (kbd "M-g w") 'avy-goto-word-1)
+(setq company-idle-delay 0)
+(setq company-minimum-prefix-length 1)
 
-;; neo-tree
-(global-set-key (kbd "C-c SPC") 'avy-goto-char)
-(global-set-key (kbd "M-g w") 'avy-goto-word-1)
+;; Go - lsp-mode
+;; Set up before-save hooks to format buffer and add/delete imports.
+(defun lsp-go-install-save-hooks ()
+  (add-hook 'before-save-hook #'lsp-format-buffer t t)
+  (add-hook 'before-save-hook #'lsp-organize-imports t t))
+(add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
 
-;; flycheck
-(global-flycheck-mode)
+;; Start LSP Mode and YASnippet mode
+(add-hook 'go-mode-hook #'lsp-deferred)
+(add-hook 'go-mode-hook #'yas-minor-mode)
 
-(require 'helm-flycheck) ;; Not necessary if using ELPA package
-(eval-after-load 'flycheck
-  '(define-key flycheck-mode-map (kbd "C-c ! h") 'helm-flycheck))
+;;helm company
+(autoload 'helm-company "helm-company") ;; Not necessary if using ELPA package
+(eval-after-load 'company
+  '(progn
+     (define-key company-mode-map (kbd "C-:") 'helm-company)
+     (define-key company-active-map (kbd "C-:") 'helm-company)))
 
-;; yasnippet
-(require 'yasnippet)
-(yas-global-mode 1)
 
-;; turn off menubar
-(menu-bar-mode -1)
 
-;; turn off toolbar
-(tool-bar-mode -1)
+;;spacemacs theme
+  (load-theme 'spacemacs-light t)
 
-;; turn off scrollbar
-(scroll-bar-mode -1)
-
-;; orgmode config
-(global-set-key "\C-cl" 'org-store-link)
-(global-set-key "\C-ca" 'org-agenda)
-(global-set-key "\C-cc" 'org-capture)
-(global-set-key "\C-cb" 'org-iswitchb)
-(setq org-log-done t)
-(setq org-agenda-files (list "~/org/work.org"
-                             "~/org/shortlist.org" 
-                             "~/org/home.org"))
-
-(require 'org-journal)
-
-(require 'org-bullets)
-(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
-
-;; anaconda-mode
-(add-hook 'python-mode-hook 'anaconda-eldoc-mode)
-(add-hook 'python-mode-hook 'anaconda-mode)
-
-;; neotree
-
-(require 'neotree)
-(global-set-key [f8] 'neotree-toggle)
-(setq neo-theme (if (display-graphic-p) 'icons 'arrow))
+;; line numbers
+  (global-display-line-numbers-mode t)
 
 ;; line highlighting
-(global-hl-line-mode +1)
-
-;; set mouse cursor
-(xterm-mouse-mode t)
-
-;; undotree
-(global-undo-tree-mode)
-
-;; Autosave on focus change
-(add-hook 'focus-out-hook 'save-buffer)
-
-;; Discover my major
-(global-set-key (kbd "C-h C-m") 'discover-my-major)
-(global-set-key (kbd "C-h M-m") 'discover-my-mode)
-
-;; reveal
-;;(require 'ox-reveal)
-;;(setq org-reveal-root "file:///home/thomas/reveal.js")
-
-;; ace window
-(global-set-key (kbd "M-p") 'ace-window)
-
-;; all the icons
-(require 'all-the-icons)
-
-;; indium
-(require 'indium)
-(add-hook 'js-mode-hook #'indium-interaction-mode)
-(setq js-indent-level 2)
-
-;; tern
-(require 'tern)
-(eval-after-load 'tern
-   '(progn
-      (require 'tern-auto-complete)
-      (tern-ac-setup)))
-
-;; orgami
-(require 'origami)
-(global-origami-mode)
-(global-set-key (kbd "C-c f") 'origami-toggle-node)
-
-;; json-mode
-(add-hook 'json-mode-hook
-          (lambda ()
-            (make-local-variable 'js-indent-level)
-            (setq js-indent-level 2)))
-
-;; web-beautify
-(require 'web-beautify)
-(eval-after-load 'js2-mode
-  '(define-key js2-mode-map (kbd "C-c b") 'web-beautify-js))
-;; Or if you're using 'js-mode' (a.k.a 'javascript-mode')
-(eval-after-load 'js
-  '(define-key js-mode-map (kbd "C-c b") 'web-beautify-js))
-
-(eval-after-load 'json-mode
-  '(define-key json-mode-map (kbd "C-c b") 'web-beautify-js))
-
-(eval-after-load 'sgml-mode
-  '(define-key html-mode-map (kbd "C-c b") 'web-beautify-html))
-
-(eval-after-load 'web-mode
-  '(define-key web-mode-map (kbd "C-c b") 'web-beautify-html))
-
-(eval-after-load 'css-mode
-  '(define-key css-mode-map (kbd "C-c b") 'web-beautify-css))
+  (global-hl-line-mode +1)
 
 ;; autosave
-    (setq backup-directory-alist
-          `((".*" . ,temporary-file-directory)))
-    (setq auto-save-file-name-transforms
-          `((".*" ,temporary-file-directory t)))
-
-;; Tramp
-(setq tramp-default-method "ssh")
-
-;; LaTeX
-(require 'ox-latex)
-(unless (boundp 'org-latex-classes)
-  (setq org-latex-classes nil))
-(add-to-list 'org-latex-classes
-          '("koma-article"
-             "\\documentclass{scrartcl}
-             [NO-DEFAULT-PACKAGES]
-             [EXTRA]"
-             ("\\section{%s}" . "\\section*{%s}")
-             ("\\subsection{%s}" . "\\subsection*{%s}")
-             ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-             ("\\paragraph{%s}" . "\\paragraph*{%s}")
-             ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-
-;; go-mode
-; "company" is auto-completion
-(require 'company)
-(require 'go-mode)
-(require 'company-go)
-(require 'go-autocomplete)
-(require 'auto-complete-config)
-(ac-config-default)
-
-;; alias
-(defalias 'yes-or-no-p 'y-or-n-p)
+  (setq backup-directory-alist
+        `((".*" . ,temporary-file-directory)))
+  (setq auto-save-file-name-transforms
+        `((".*" ,temporary-file-directory t)))
 
 ;; column numbers
-(setq column-number-mode t)
-
-
+  (setq column-number-mode t)
 
 ;; init.el ends here
