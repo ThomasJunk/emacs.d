@@ -29,6 +29,10 @@
 
   (setq make-backup-files nil)
 
+(require 'wc-mode)
+;; Suggested setting
+(global-set-key "\C-cw" 'wc-mode)
+
 ;;markdown mode
 (use-package markdown-mode
   :ensure t
@@ -181,6 +185,12 @@
           org-hide-emphasis-markers t
           org-startup-with-inline-images t
           org-image-actual-width '(300))
+
+;;org superstar
+(require 'org-superstar)
+(add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
+
+
 
 ;;org roam
 (use-package org-roam
