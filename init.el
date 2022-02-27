@@ -28,10 +28,37 @@
   (defalias 'yes-or-no-p 'y-or-n-p)
 
   (setq make-backup-files nil)
-
-(require 'wc-mode)
+  (setq blink-cursor-interval 0.6)
+  (require 'wc-mode)
+  (setq-default indent-tabs-mode nil)
+  (setq-default tab-width 4)
+  (setq indent-line-function 'insert-tab)
+  
 ;; Suggested setting
 (global-set-key "\C-cw" 'wc-mode)
+
+;; company-prescient
+
+
+;;gcmh
+(use-package gcmh
+  :diminish gcmh-mode
+  :config
+  (setq gcmh-idle-delay 5
+        gcmh-high-cons-threshold (* 16 1024 1024))  ; 16mb
+  (gcmh-mode 1))
+
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (setq gc-cons-percentage 0.1))) ;; Default value for `gc-cons-percentage'
+
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (message "Emacs ready in %s with %d garbage collections."
+                     (format "%.2f seconds"
+                             (float-time
+                              (time-subtract after-init-time before-init-time)))
+                     gcs-done)))
 
 ;;markdown mode
 (use-package markdown-mode
@@ -533,7 +560,7 @@
           'spacemacs//helm-hide-minibuffer-maybe)
 
 (setq helm-autoresize-max-height 0)
-(setq helm-autoresize-min-height 20)
+(setq helm-autoresize-min-height 30)
 (helm-autoresize-mode 1)
 
 (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to do persistent action
@@ -549,6 +576,30 @@
 (define-key minibuffer-local-map (kbd "C-c C-l") 'helm-minibuffer-history)
 
 (helm-mode 1)
+
+;;helm-tramp
+(setq tramp-default-method "ssh")
+(define-key global-map (kbd "C-c s") 'helm-tramp)
+(add-hook 'helm-tramp-pre-command-hook '(lambda () (global-aggressive-indent-mode 0)
+				     (projectile-mode 0)
+				     (editorconfig-mode 0)))
+(add-hook 'helm-tramp-quit-hook '(lambda () (global-aggressive-indent-mode 1)
+			      (projectile-mode 1)
+			      (editorconfig-mode 1)))
+(setq make-backup-files nil)
+(setq create-lockfiles nil)
+
+;;
+
+;;helm-gopackage
+(autoload 'helm-go-package "helm-go-package") ;; Not necessary if using ELPA package
+(eval-after-load 'go-mode
+  '(substitute-key-definition 'go-import-add 'helm-go-package go-mode-map))
+
+;;helm-flycheck
+(require 'helm-flycheck) ;; Not necessary if using ELPA package
+(eval-after-load 'flycheck
+  '(define-key flycheck-mode-map (kbd "C-c ! h") 'helm-flycheck))
 
 ;;helm descbinds
 (require 'helm-descbinds)
