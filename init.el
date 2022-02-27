@@ -37,8 +37,12 @@
 ;; Suggested setting
 (global-set-key "\C-cw" 'wc-mode)
 
-;; company-prescient
-
+;; quelpa
+(quelpa
+ '(quelpa-use-package
+   :fetcher git
+   :url "https://github.com/quelpa/quelpa-use-package.git"))
+(require 'quelpa-use-package)
 
 ;;gcmh
 (use-package gcmh
@@ -260,12 +264,18 @@
 (global-set-key "\C-ca" 'org-agenda)
 (global-set-key "\C-cc" 'org-capture)
 (global-set-key "\C-cb" 'org-iswitchb)
-(setq org-log-done t)
+(setq org-log-done 'time)
 (setq org-agenda-files (list "~/org/work.org"
                              "~/org/shortlist.org" 
                              "~/org/home.org"))
 
 (add-hook 'org-mode-hook 'org-appear-mode)
+(setq org-ellipsis "⤵")
+
+;;org-ql
+(use-package org-ql
+  :quelpa (org-ql :fetcher github :repo "alphapapa/org-ql"
+                  :files (:defaults (:exclude "helm-org-ql.el"))))
 
 ;; Improve org mode looks
     (setq org-startup-indented t
