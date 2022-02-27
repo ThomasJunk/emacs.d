@@ -328,7 +328,7 @@
 (require 'org-superstar)
 (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
 (setq
-    org-superstar-headline-bullets-list '("⁖" "◉" "○" "✸" "✿")
+    org-superstar-headline-bullets-list '("❀" "⁕" "★" "☆" "✦")
 )
 
 ;;org-download
