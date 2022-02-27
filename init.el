@@ -7,7 +7,6 @@
   (require 'package)
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
   (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/"))
-  (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
   (add-to-list 'package-archives '("ox-odt" . "https://kjambunathan.github.io/elpa/"))
   (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
   (package-initialize)
