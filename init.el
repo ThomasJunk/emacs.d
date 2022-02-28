@@ -5,11 +5,15 @@
 
 ;; Define and initialise package repositories
 (require 'package)
-  (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
   (add-to-list 'package-archives '("elpa" . "https://elpa.gnu.org/packages/"))
   (add-to-list 'package-archives '("ox-odt" . "https://kjambunathan.github.io/elpa/"))
   (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
   (package-initialize)
+
+;;elpa.gnu-fix
+  (when (equal emacs-version "27.2")
+  (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3"))
 
   ;; use-package to simplify the config file
   (unless (package-installed-p 'use-package)
@@ -38,11 +42,11 @@
 (global-set-key "\C-cw" 'wc-mode)
 
 ;; quelpa
-(quelpa
- '(quelpa-use-package
-   :fetcher git
-   :url "https://github.com/quelpa/quelpa-use-package.git"))
-(require 'quelpa-use-package)
+  (quelpa
+   '(quelpa-use-package
+     :fetcher git
+     :url "https://github.com/quelpa/quelpa-use-package.git"))
+  (require 'quelpa-use-package)
 
 ;;gcmh
 (use-package gcmh
@@ -80,17 +84,16 @@
 (require 'all-the-icons)
 
 ;; flycheck
-(package-install 'flycheck)
+(require 'flycheck)
 
 (global-flycheck-mode)
-(package-install 'exec-path-from-shell)
+(require 'exec-path-from-shell)
 (exec-path-from-shell-initialize)
 (add-hook 'after-init-hook #'global-flycheck-mode)
 
 ;;dumb jump
 (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
 (setq xref-show-definitions-function #'xref-show-definitions-completing-read)
-
 
 ;; go-mode
 ; "company" is auto-completion
@@ -333,10 +336,6 @@
 (setq
     org-superstar-headline-bullets-list '("❀" "⁕" "★" "☆" "✦")
 )
-
-;;org-download
-(use-package org-download
-  :ensure t)
 
 ;;magit
 (use-package magit
