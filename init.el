@@ -258,9 +258,6 @@
 (global-set-key "\C-cc" 'org-capture)
 (global-set-key "\C-cb" 'org-iswitchb)
 (setq org-log-done 'time)
-(setq org-agenda-files (list "~/org/work.org"
-                             "~/org/shortlist.org" 
-                             "~/org/home.org"))
 
 (add-hook 'org-mode-hook 'org-appear-mode)
 (setq org-ellipsis "⤵")
@@ -276,6 +273,9 @@
           org-hide-emphasis-markers t
           org-startup-with-inline-images t
           org-image-actual-width '(300))
+
+(setq org-clock-persist 'history)
+(org-clock-persistence-insinuate)
 
 ;; org-mode agendafiles
 (setq org-agenda-files (list "/Users/thomasjunk/Documents/org/slimlist.org"))
