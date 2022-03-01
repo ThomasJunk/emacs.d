@@ -40,6 +40,21 @@
 
 (save-place-mode 1)
 
+;; deft
+(require 'deft)
+(setq deft-extensions '("txt" "tex" "org" "md"))
+(setq deft-directory "~/Dokumente/arbeit")
+(setq deft-recursive t)
+(setq deft-use-filename-as-title t)
+(setq deft-recursive-ignore-dir-regexp
+          (concat "\\(?:"
+                  "\\."
+                  "\\|\\.\\."
+                  "\\\|org"
+                  "\\)$"))
+
+(global-set-key [f2] 'deft)
+
 ;; quelpa
 (quelpa
  '(quelpa-use-package
