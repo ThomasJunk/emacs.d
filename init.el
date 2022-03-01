@@ -5,15 +5,11 @@
 
 ;; Define and initialise package repositories
 (require 'package)
-  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+  (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
   (add-to-list 'package-archives '("elpa" . "https://elpa.gnu.org/packages/"))
   (add-to-list 'package-archives '("ox-odt" . "https://kjambunathan.github.io/elpa/"))
   (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
   (package-initialize)
-
-;;elpa.gnu-fix
-  (when (equal emacs-version "27.2")
-  (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3"))
 
   ;; use-package to simplify the config file
   (unless (package-installed-p 'use-package)
@@ -40,15 +36,15 @@
 
 ;; Suggested setting
 (global-set-key "\C-cw" 'wc-mode)
-(save-place-mode 1)
 (setq-default show-trailing-whitespace t)
+(save-place-mode 1)
 
 ;; quelpa
-  (quelpa
-   '(quelpa-use-package
-     :fetcher git
-     :url "https://github.com/quelpa/quelpa-use-package.git"))
-  (require 'quelpa-use-package)
+(quelpa
+ '(quelpa-use-package
+   :fetcher git
+   :url "https://github.com/quelpa/quelpa-use-package.git"))
+(require 'quelpa-use-package)
 
 ;;gcmh
 (use-package gcmh
@@ -86,16 +82,17 @@
 (require 'all-the-icons)
 
 ;; flycheck
-(require 'flycheck)
+(package-install 'flycheck)
 
 (global-flycheck-mode)
-(require 'exec-path-from-shell)
+(package-install 'exec-path-from-shell)
 (exec-path-from-shell-initialize)
 (add-hook 'after-init-hook #'global-flycheck-mode)
 
 ;;dumb jump
 (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
 (setq xref-show-definitions-function #'xref-show-definitions-completing-read)
+
 
 ;; go-mode
 ; "company" is auto-completion
@@ -167,6 +164,9 @@
 (add-hook 'javascript-mode-hook #'lsp)
 
 (lsp-treemacs-sync-mode 1)
+
+(setq lsp-diagnostics-provider :none)
+
 
 (define-key lsp-mode-map [remap xref-find-apropos] #'helm-lsp-workspace-symbol)
 
@@ -264,9 +264,6 @@
 (global-set-key "\C-cb" 'org-iswitchb)
 (setq org-log-done 'time)
 
-(setq org-clock-persist 'history)
-(org-clock-persistence-insinuate)
-
 (add-hook 'org-mode-hook 'org-appear-mode)
 (setq org-ellipsis "⤵")
 
@@ -282,11 +279,21 @@
           org-startup-with-inline-images t
           org-image-actual-width '(300))
 
+;; org-mode agendafiles
+(setq org-agenda-files (list "/home/tjunk/Dokumente/arbeit/org/slimlist.org"
+                             "/home/tjunk/Dokumente/arbeit/org/upcoming.org"
+                             "/home/tjunk/Dokumente/arbeit/org/lkos.org"
+                             "/home/tjunk/Dokumente/arbeit/org/bfz2.org"
+                             "/home/tjunk/Dokumente/arbeit/org/migdb.org"
+                             "/home/tjunk/Dokumente/arbeit/org/intkibe.org"
+                             "/home/tjunk/Dokumente/arbeit/org/ganztag.org"
+                             "/home/tjunk/Dokumente/arbeit/org/wamos.org"
+                             "/home/tjunk/Dokumente/arbeit/org/jmd.org"
+                             )
+)
+
 (setq org-clock-persist 'history)
 (org-clock-persistence-insinuate)
-
-;; org-mode agendafiles
-(setq org-agenda-files (list "/Users/thomasjunk/Documents/org/slimlist.org"))
 
 ;;ox-pandoc
 ;; default options for all output formats
@@ -341,6 +348,10 @@
 (setq
     org-superstar-headline-bullets-list '("❀" "⁕" "★" "☆" "✦")
 )
+
+;;org-download
+(use-package org-download
+  :ensure t)
 
 ;;magit
 (use-package magit
@@ -602,7 +613,13 @@
 (setq make-backup-files nil)
 (setq create-lockfiles nil)
 
-;;
+;;tramp
+(setq remote-file-name-inhibit-cache nil)
+(setq vc-ignore-dir-regexp
+      (format "%s\\|%s"
+                    vc-ignore-dir-regexp
+                    tramp-file-name-regexp))
+(setq tramp-verbose 1)
 
 ;;helm-gopackage
 (autoload 'helm-go-package "helm-go-package") ;; Not necessary if using ELPA package
