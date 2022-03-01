@@ -298,6 +298,7 @@
 (setq org-clock-persist 'history)
 (org-clock-persistence-insinuate)
 
+(setq org-default-notes-file "~/Documents/notizen")
 ;; org-mode agendafiles
 (setq org-agenda-files (list "/Users/thomasjunk/Documents/org/slimlist.org"))
 
@@ -316,7 +317,7 @@
 (use-package org-roam
   :ensure t
   :custom
-  (org-roam-directory (file-truename "/path/to/org-files/"))
+  (org-roam-directory (file-truename "~/Documents/zettelkasten"))
   :bind (("C-c n l" . org-roam-buffer-toggle)
          ("C-c n f" . org-roam-node-find)
          ("C-c n g" . org-roam-graph)
@@ -330,7 +331,7 @@
   (org-roam-db-autosync-mode)
   ;; If using org-roam-protocol
   (require 'org-roam-protocol))
-
+(org-roam-db-autosync-mode)
 
 ;; org-download
 (require 'org-download)
