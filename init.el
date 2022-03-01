@@ -42,6 +42,19 @@
 (global-set-key "\C-cw" 'wc-mode)
 (save-place-mode 1)
 
+;; deft
+(require 'deft)
+(setq deft-extensions '("txt" "tex" "org" "md"))
+(setq deft-directory "~/Documents/notizen")
+(setq deft-recursive t)
+(setq deft-use-filename-as-title t)
+(setq deft-recursive-ignore-dir-regexp
+          (concat "\\(?:"
+                  "\\."
+                  "\\|\\.\\."
+                  "\\\|org"
+                  "\\)$"))
+(global-set-key [f2] 'deft)
 
 ;; quelpa
   (quelpa
