@@ -41,7 +41,7 @@
 ;; Suggested setting
 (global-set-key "\C-cw" 'wc-mode)
 (save-place-mode 1)
-(setq-default show-trailing-whitespace t)
+
 
 ;; quelpa
   (quelpa
