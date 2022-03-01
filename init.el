@@ -37,9 +37,11 @@
   (setq-default indent-tabs-mode nil)
   (setq-default tab-width 4)
   (setq indent-line-function 'insert-tab)
-  
+
 ;; Suggested setting
 (global-set-key "\C-cw" 'wc-mode)
+(save-place-mode 1)
+(setq-default show-trailing-whitespace t)
 
 ;; quelpa
   (quelpa
@@ -261,6 +263,9 @@
 (global-set-key "\C-cc" 'org-capture)
 (global-set-key "\C-cb" 'org-iswitchb)
 (setq org-log-done 'time)
+
+(setq org-clock-persist 'history)
+(org-clock-persistence-insinuate)
 
 (add-hook 'org-mode-hook 'org-appear-mode)
 (setq org-ellipsis "⤵")
