@@ -39,6 +39,35 @@
 
 (save-place-mode 1)
 
+;; dashboard
+(require 'dashboard)
+(dashboard-setup-startup-hook)
+;; Or if you use use-package
+(use-package dashboard
+  :ensure t
+  :config
+  (dashboard-setup-startup-hook))
+
+(setq dashboard-center-content t)
+;; To disable shortcut "jump" indicators for each section, set
+(setq dashboard-show-shortcuts nil)
+
+(setq dashboard-items '((recents  . 5)
+                        (bookmarks . 5)
+                        (registers . 5)))
+
+(setq dashboard-set-heading-icons t)
+(setq dashboard-set-file-icons t)
+(setq dashboard-set-navigator t)
+(setq dashboard-banner-logo-title "డ(°益°)హ ,( Bro, Even if you're swol, it doesn't mean you're a bro, bro. )")
+(setq dashboard-startup-banner 3)
+(setq dashboard-set-footer nil)
+(dashboard-modify-heading-icons '((recents . "file-text")
+                                  (bookmarks . "book")))
+(setq dashboard-item-names '(("Recent Files:" . "Zuletzt geöffnet:")
+                             ("Bookmarks:" . "Lesezeichen")
+                             ("Registers:" . "Register:")))
+
 ;; deft
 (require 'deft)
 (setq deft-extensions '("txt" "tex" "org" "md"))
