@@ -5,7 +5,7 @@
 
 ;; Define and initialise package repositories
 (require 'package)
-(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (add-to-list 'package-archives '("elpa" . "https://elpa.gnu.org/packages/"))
 (add-to-list 'package-archives '("ox-odt" . "https://kjambunathan.github.io/elpa/"))
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
