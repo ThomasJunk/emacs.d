@@ -3,6 +3,7 @@
 ;; Copyright (C) 2022 Thomas Junk
 
 ;; Author: Thomas Junk <tjunk@intevation.de>
+;;; Code:
 
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (when (file-exists-p custom-file)
@@ -76,7 +77,7 @@
 (setq dashboard-center-content t)
 ;; To disable shortcut "jump" indicators for each section, set
 (setq dashboard-show-shortcuts nil)
-(setq dashboard-items '((recents  . 5)
+(setq dashboard-items '((recents  . 10)
                         (bookmarks . 5)
                         (registers . 5)))
 (setq dashboard-set-heading-icons t)
@@ -821,4 +822,4 @@ With WITH-TYPES, ask for file types to search in."
      (define-key company-mode-map (kbd "C-:") 'helm-company)
      (define-key company-active-map (kbd "C-:") 'helm-company)))
 
-;; init.el ends here
+;;; init.el ends here
