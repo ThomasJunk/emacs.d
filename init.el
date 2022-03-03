@@ -1,42 +1,42 @@
 ;; Define the init file
-  (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-  (when (file-exists-p custom-file)
-    (load custom-file))
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(when (file-exists-p custom-file)
+      (load custom-file))
 
 ;; Define and initialise package repositories
 (require 'package)
-  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-  (add-to-list 'package-archives '("elpa" . "https://elpa.gnu.org/packages/"))
-  (add-to-list 'package-archives '("ox-odt" . "https://kjambunathan.github.io/elpa/"))
-  (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
-  (package-initialize)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(add-to-list 'package-archives '("elpa" . "https://elpa.gnu.org/packages/"))
+(add-to-list 'package-archives '("ox-odt" . "https://kjambunathan.github.io/elpa/"))
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
+(package-initialize)
 
 ;;elpa.gnu-fix
-  (when (equal emacs-version "27.2")
-  (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3"))
+(when (equal emacs-version "27.2")
+      (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3"))
 
-  ;; use-package to simplify the config file
-  (unless (package-installed-p 'use-package)
-    (package-refresh-contents)
-    (package-install 'use-package))
-  (require 'use-package)
-  (setq use-package-always-ensure 't)
+;; use-package to simplify the config file
+(unless (package-installed-p 'use-package)
+        (package-refresh-contents)
+        (package-install 'use-package))
+(require 'use-package)
+(setq use-package-always-ensure 't)
 
-  ;; Keyboard-centric user interface
-  (setq inhibit-splash-screen t
-      initial-scratch-message nil
-      initial-major-mode 'text-mode)
-  (tool-bar-mode -1)
-  (menu-bar-mode -1)
-  (scroll-bar-mode -1)
-  (defalias 'yes-or-no-p 'y-or-n-p)
+;; Keyboard-centric user interface
+(setq inhibit-splash-screen t
+  initial-scratch-message nil
+  initial-major-mode 'text-mode)
+(tool-bar-mode -1)
+(menu-bar-mode -1)
+(scroll-bar-mode -1)
+(defalias 'yes-or-no-p 'y-or-n-p)
 
-  (setq make-backup-files nil)
-  (setq blink-cursor-interval 0.6)
-  (require 'wc-mode)
-  (setq-default indent-tabs-mode nil)
-  (setq-default tab-width 4)
-  (setq indent-line-function 'insert-tab)
+(setq make-backup-files nil)
+(setq blink-cursor-interval 0.6)
+(require 'wc-mode)
+(setq-default indent-tabs-mode nil)
+(setq-default tab-width 4)
+(setq indent-line-function 'insert-tab)
 
 ;; Suggested setting
 (global-set-key "\C-cw" 'wc-mode)
@@ -49,39 +49,39 @@
 (setq deft-recursive t)
 (setq deft-use-filename-as-title t)
 (setq deft-recursive-ignore-dir-regexp
-          (concat "\\(?:"
-                  "\\."
-                  "\\|\\.\\."
-                  "\\\|org"
-                  "\\)$"))
+  (concat "\\(?:"
+          "\\."
+          "\\|\\.\\."
+          "\\\|org"
+          "\\)$"))
 (global-set-key [f2] 'deft)
 
 ;; quelpa
-  (quelpa
-   '(quelpa-use-package
-     :fetcher git
-     :url "https://github.com/quelpa/quelpa-use-package.git"))
-  (require 'quelpa-use-package)
+(quelpa
+  '(quelpa-use-package
+    :fetcher git
+    :url "https://github.com/quelpa/quelpa-use-package.git"))
+(require 'quelpa-use-package)
 
 ;;gcmh
 (use-package gcmh
   :diminish gcmh-mode
   :config
   (setq gcmh-idle-delay 5
-        gcmh-high-cons-threshold (* 16 1024 1024))  ; 16mb
+        gcmh-high-cons-threshold (* 16 1024 1024)) ; 16mb
   (gcmh-mode 1))
 
 (add-hook 'emacs-startup-hook
-          (lambda ()
-            (setq gc-cons-percentage 0.1))) ;; Default value for `gc-cons-percentage'
+  (lambda ()
+    (setq gc-cons-percentage 0.1))) ;; Default value for `gc-cons-percentage'
 
 (add-hook 'emacs-startup-hook
-          (lambda ()
-            (message "Emacs ready in %s with %d garbage collections."
-                     (format "%.2f seconds"
-                             (float-time
-                              (time-subtract after-init-time before-init-time)))
-                     gcs-done)))
+  (lambda ()
+    (message "Emacs ready in %s with %d garbage collections."
+             (format "%.2f seconds"
+                     (float-time
+                      (time-subtract after-init-time before-init-time)))
+             gcs-done)))
 
 ;;markdown mode
 (use-package markdown-mode
@@ -128,7 +128,7 @@
   :config
   (setq lsp-idle-delay 0.5
         lsp-enable-symbol-highlighting t
-        lsp-enable-snippet nil  ;; Not supported by company capf, which is the recommended company backend
+        lsp-enable-snippet nil ;; Not supported by company capf, which is the recommended company backend
         lsp-pyls-plugins-flake8-enabled t)
   (lsp-register-custom-settings
    '(("pyls.plugins.pyls_mypy.enabled" t t)
@@ -142,9 +142,7 @@
      ("pyls.plugins.pyflakes.enabled" nil t)))
   :hook
   ((python-mode . lsp)
-   (lsp-mode . lsp-enable-which-key-integration))
-)
-
+   (lsp-mode . lsp-enable-which-key-integration)))
 
 (use-package lsp-ui
   :config (setq lsp-ui-sideline-show-hover t
@@ -195,11 +193,10 @@
 ;; set mouse cursor
 ;;;; Mouse scrolling in terminal emacs
 (unless (display-graphic-p)
-  ;; activate mouse-based scrolling
-  (xterm-mouse-mode 1)
-  (global-set-key (kbd "<mouse-4>") 'scroll-down-line)
-  (global-set-key (kbd "<mouse-5>") 'scroll-up-line)
-  )	
+        ;; activate mouse-based scrolling
+        (xterm-mouse-mode 1)
+        (global-set-key (kbd "<mouse-4>") 'scroll-down-line)
+        (global-set-key (kbd "<mouse-5>") 'scroll-up-line))
 
 ;; orgami
 (require 'origami)
@@ -208,15 +205,15 @@
 
 ;;whichkey
 (use-package which-key
-  :ensure t 
+  :ensure t
   :config
   (which-key-mode))
 
 ;; json-mode
 (add-hook 'json-mode-hook
-          (lambda ()
-            (make-local-variable 'js-indent-level)
-            (setq js-indent-level 2)))
+  (lambda ()
+    (make-local-variable 'js-indent-level)
+    (setq js-indent-level 2)))
 
 ;;prettier
 (add-hook 'web-mode-hook 'prettier-js-mode)
@@ -225,7 +222,7 @@
   "Enable minor mode if filename match the regexp.  MY-PAIR is a cons cell (regexp . minor-mode)."
   (if (buffer-file-name)
       (if (string-match (car my-pair) buffer-file-name)
-	  (funcall (cdr my-pair)))))
+          (funcall (cdr my-pair)))))
 
 (add-hook 'web-mode-hook #'(lambda ()
                             (enable-minor-mode
@@ -246,21 +243,21 @@
   :ensure t
   :config
   (progn
-    (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-    (setq web-mode-engines-alist
-          '(("django"    . "\\.html\\'")))
-    (setq web-mode-ac-sources-alist
-          '(("css" . (ac-source-css-property))
-            ("html" . (ac-source-words-in-buffer ac-source-abbrev))))
-    (setq web-mode-markup-indent-offset 2)
-    (setq web-mode-code-indent-offset 2)
-    (setq web-mode-css-indent-offset 2)
-    (setq web-mode-enable-current-element-highlight t)
-    (setq web-mode-enable-auto-closing t)
-    (setq web-mode-enable-auto-quoting t)
-    (setq web-mode-enable-auto-pairing t)
-    (setq web-mode-enable-auto-expanding t)
-    (setq web-mode-enable-css-colorization t)))
+   (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+   (setq web-mode-engines-alist
+         '(("django"    . "\\.html\\'")))
+   (setq web-mode-ac-sources-alist
+         '(("css" . (ac-source-css-property))
+           ("html" . (ac-source-words-in-buffer ac-source-abbrev))))
+   (setq web-mode-markup-indent-offset 2)
+   (setq web-mode-code-indent-offset 2)
+   (setq web-mode-css-indent-offset 2)
+   (setq web-mode-enable-current-element-highlight t)
+   (setq web-mode-enable-auto-closing t)
+   (setq web-mode-enable-auto-quoting t)
+   (setq web-mode-enable-auto-pairing t)
+   (setq web-mode-enable-auto-expanding t)
+   (setq web-mode-enable-css-colorization t)))
 
 ;; undotree
 (global-undo-tree-mode)
@@ -289,11 +286,11 @@
                   :files (:defaults (:exclude "helm-org-ql.el"))))
 
 ;; Improve org mode looks
-    (setq org-startup-indented t
-          org-pretty-entities t
-          org-hide-emphasis-markers t
-          org-startup-with-inline-images t
-          org-image-actual-width '(300))
+(setq org-startup-indented t
+  org-pretty-entities t
+  org-hide-emphasis-markers t
+  org-startup-with-inline-images t
+  org-image-actual-width '(300))
 
 (setq org-clock-persist 'history)
 (org-clock-persistence-insinuate)
@@ -353,26 +350,25 @@
 (require 'org-superstar)
 (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
 (setq
-    org-superstar-headline-bullets-list '("❀" "⁕" "★" "☆" "✦")
-)
+  org-superstar-headline-bullets-list '("❀" "⁕" "★" "☆" "✦"))
 
 ;;magit
 (use-package magit
   :ensure t
-  :config (setq magit-display-buffer-function  ;; Make Magit Fullscreen
+  :config (setq magit-display-buffer-function ;; Make Magit Fullscreen
                 (lambda (buffer)
                   (if magit-display-buffer-noselect
-                    ;; the code that called `magit-display-buffer-function'
-                    ;; expects the original window to stay alive, we can't go
-                    ;; fullscreen
-                    (magit-display-buffer-traditional buffer)
-                    (delete-other-windows)
-                    ;; make sure the window isn't dedicated, otherwise
-                    ;; `set-window-buffer' throws an error
-                    (set-window-dedicated-p nil nil)
-                    (set-window-buffer nil buffer)
-                    ;; return buffer's window
-                    (get-buffer-window buffer)))))
+                      ;; the code that called `magit-display-buffer-function'
+                      ;; expects the original window to stay alive, we can't go
+                      ;; fullscreen
+                      (magit-display-buffer-traditional buffer)
+                      (delete-other-windows)
+                      ;; make sure the window isn't dedicated, otherwise
+                      ;; `set-window-buffer' throws an error
+                      (set-window-dedicated-p nil nil)
+                      (set-window-buffer nil buffer)
+                      ;; return buffer's window
+                      (get-buffer-window buffer)))))
 
 (global-set-key "\C-xg" 'magit-status)
 
@@ -555,36 +551,35 @@
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
 (global-set-key (kbd "C-x b") 'helm-mini)
 (setq helm-buffers-fuzzy-matching t
-      helm-recentf-fuzzy-match    t)
+  helm-recentf-fuzzy-match t)
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
 
 (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
 (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB work in terminal
-(define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+(define-key helm-map (kbd "C-z") 'helm-select-action) ; list actions using C-z
 
 (when (executable-find "curl")
-  (setq helm-google-suggest-use-curl-p t))
+      (setq helm-google-suggest-use-curl-p t))
 
-(setq helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
-      helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
-      helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
-      helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
-      helm-ff-file-name-history-use-recentf t
-      helm-echo-input-in-header-line t)
+(setq helm-split-window-in-side-p t ; open helm buffer inside current window, not occupy whole other window
+  helm-move-to-line-cycle-in-source t ; move to end or beginning of source when reaching top or bottom of source.
+  helm-ff-search-library-in-sexp t ; search for library in `require' and `declare-function' sexp.
+  helm-scroll-amount 8 ; scroll 8 lines other window using M-<next>/M-<prior>
+  helm-ff-file-name-history-use-recentf t
+  helm-echo-input-in-header-line t)
 
 (defun spacemacs//helm-hide-minibuffer-maybe ()
   "Hide minibuffer in Helm session if we use the header line as input field."
   (when (with-helm-buffer helm-echo-input-in-header-line)
-    (let ((ov (make-overlay (point-min) (point-max) nil nil t)))
-      (overlay-put ov 'window (selected-window))
-      (overlay-put ov 'face
-                   (let ((bg-color (face-background 'default nil)))
-                     `(:background ,bg-color :foreground ,bg-color)))
-      (setq-local cursor-type nil))))
-
+        (let ((ov (make-overlay (point-min) (point-max) nil nil t)))
+          (overlay-put ov 'window (selected-window))
+          (overlay-put ov 'face
+                       (let ((bg-color (face-background 'default nil)))
+                         `(:background ,bg-color :foreground ,bg-color)))
+          (setq-local cursor-type nil))))
 
 (add-hook 'helm-minibuffer-set-up-hook
-          'spacemacs//helm-hide-minibuffer-maybe)
+  'spacemacs//helm-hide-minibuffer-maybe)
 
 (setq helm-autoresize-max-height 0)
 (setq helm-autoresize-min-height 30)
@@ -592,7 +587,7 @@
 
 (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to do persistent action
 (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
-(define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+(define-key helm-map (kbd "C-z") 'helm-select-action) ; list actions using C-z
 
 (setq helm-locate-fuzzy-match t)
 (global-set-key (kbd "C-c h o") 'helm-occur)
@@ -608,11 +603,11 @@
 (setq tramp-default-method "ssh")
 (define-key global-map (kbd "C-c s") 'helm-tramp)
 (add-hook 'helm-tramp-pre-command-hook '(lambda () (global-aggressive-indent-mode 0)
-				     (projectile-mode 0)
-				     (editorconfig-mode 0)))
+         (projectile-mode 0)
+         (editorconfig-mode 0)))
 (add-hook 'helm-tramp-quit-hook '(lambda () (global-aggressive-indent-mode 1)
-			      (projectile-mode 1)
-			      (editorconfig-mode 1)))
+         (projectile-mode 1)
+         (editorconfig-mode 1)))
 (setq make-backup-files nil)
 (setq create-lockfiles nil)
 
@@ -683,46 +678,49 @@
 
 ;; Use search query at the cursor  (default)
 (setq helm-swoop-pre-input-function
-      (lambda () (thing-at-point 'symbol)))
+  (lambda () (thing-at-point 'symbol)))
 
 ;; Disable pre-input
 (setq helm-swoop-pre-input-function
-      (lambda () ""))
+  (lambda () ""))
 ;; Or, just use M-x helm-swoop-without-pre-input
 
 ;; Match only for symbol
 (setq helm-swoop-pre-input-function
-      (lambda () (format "\\_<%s\\_> " (thing-at-point 'symbol))))
+  (lambda () (format "\\_<%s\\_> " (thing-at-point 'symbol))))
 
 ;; Always use the previous search for helm. Remember C-<backspace> will delete entire line
 (setq helm-swoop-pre-input-function
-      (lambda () (if (boundp 'helm-swoop-pattern)
-                     helm-swoop-pattern "")))
+  (lambda ()
+    (if (boundp 'helm-swoop-pattern)
+        helm-swoop-pattern
+        "")))
 
 ;; If there is no symbol at the cursor, use the last used words instead.
 (setq helm-swoop-pre-input-function
-      (lambda ()
-        (let (($pre-input (thing-at-point 'symbol)))
-          (if (eq (length $pre-input) 0)
-              helm-swoop-pattern ;; this variable keeps the last used words
-            $pre-input))))
+  (lambda ()
+    (let (($pre-input (thing-at-point 'symbol)))
+      (if (eq (length $pre-input) 0)
+          helm-swoop-pattern
+          ;; this variable keeps the last used words
+          $pre-input))))
 
 ;; If a symbol or phrase is selected, use it as the initial query.
 (setq helm-swoop-pre-input-function
-      (lambda ()
-        (if mark-active
-            (buffer-substring-no-properties (mark) (point))
-          "")))
+  (lambda ()
+    (if mark-active
+        (buffer-substring-no-properties (mark) (point))
+        "")))
 
 ;; helm projectile
-  (require 'helm-projectile)
-  (projectile-global-mode)
-  (setq projectile-completion-system 'helm)
-  (setq projectile-enable-caching t)
-  (helm-projectile-on)
+(require 'helm-projectile)
+(projectile-global-mode)
+(setq projectile-completion-system 'helm)
+(setq projectile-enable-caching t)
+(helm-projectile-on)
 
 (setq helm-semantic-fuzzy-match t
-      helm-imenu-fuzzy-match    t)
+  helm-imenu-fuzzy-match t)
 
 ;;helm ripgrep
 (setq helm-grep-ag-command (concat "rg"
@@ -730,7 +728,7 @@
                                    " --smart-case"
                                    " --no-heading"
                                    " --line-number %s %s %s")
-      helm-grep-file-path-style 'relative)
+  helm-grep-file-path-style 'relative)
 (defun mu-helm-rg (directory &optional with-types)
   "Search in DIRECTORY with RG.
 With WITH-TYPES, ask for file types to search in."
@@ -739,12 +737,12 @@ With WITH-TYPES, ask for file types to search in."
   (helm-grep-ag-1 (expand-file-name directory)
                   (helm-aif (and with-types
                                  (helm-grep-ag-get-types))
-                      (helm-comp-read
-                       "RG type: " it
-                       :must-match t
-                       :marked-candidates t
-                       :fc-transformer 'helm-adaptive-sort
-                       :buffer "*helm rg types*"))))
+                            (helm-comp-read
+                             "RG type: " it
+                             :must-match t
+                             :marked-candidates t
+                             :fc-transformer 'helm-adaptive-sort
+                             :buffer "*helm rg types*"))))
 
 (defun mu-helm-project-search (&optional with-types)
   "Search in current project with RG.
@@ -762,8 +760,8 @@ With WITH-TYPES, ask for file types to search in."
   "Return the project root directory or `helm-current-directory'."
   (require 'helm-ls-git)
   (if-let (dir (helm-ls-git-root-dir))
-      dir
-    (helm-current-directory)))
+          dir
+          (helm-current-directory)))
 
 ;; company mode
 (add-hook 'after-init-hook 'global-company-mode)
@@ -798,21 +796,21 @@ With WITH-TYPES, ask for file types to search in."
 
 
 ;;spacemacs theme
-  (load-theme 'spacemacs-dark t)
+(load-theme 'spacemacs-dark t)
 
 ;; line numbers
-  (global-display-line-numbers-mode t)
+(global-display-line-numbers-mode t)
 
 ;; line highlighting
-  (global-hl-line-mode +1)
+(global-hl-line-mode +1)
 
 ;; autosave
-  (setq backup-directory-alist
-        `((".*" . ,temporary-file-directory)))
-  (setq auto-save-file-name-transforms
-        `((".*" ,temporary-file-directory t)))
+(setq backup-directory-alist
+  `((".*" . ,temporary-file-directory)))
+(setq auto-save-file-name-transforms
+  `((".*" ,temporary-file-directory t)))
 
 ;; column numbers
-  (setq column-number-mode t)
+(setq column-number-mode t)
 
 ;; init.el ends here
