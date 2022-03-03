@@ -1,4 +1,9 @@
-;; Define the init file
+;;; init.el --- Emacs Configuration.	-*- lexical-binding: t no-byte-compile: t -*-
+
+;; Copyright (C) 2022 Thomas Junk
+
+;; Author: Thomas Junk <tjunk@intevation.de>
+
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (when (file-exists-p custom-file)
       (load custom-file))
@@ -22,7 +27,7 @@
 (require 'use-package)
 (setq use-package-always-ensure 't)
 
-;; Keyboard-centric user interface
+;; some defaults
 (setq inhibit-splash-screen t
   initial-scratch-message nil
   initial-major-mode 'text-mode)
@@ -30,35 +35,50 @@
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
 (defalias 'yes-or-no-p 'y-or-n-p)
-
+;;spacemacs theme
+(load-theme 'spacemacs-dark t)
+;; line numbers
+(global-display-line-numbers-mode t)
+;; line highlighting
+(global-hl-line-mode +1)
+;; autosave
+(setq backup-directory-alist
+  `((".*" . ,temporary-file-directory)))
+(setq auto-save-file-name-transforms
+  `((".*" ,temporary-file-directory t)))
+;; column numbers
+(setq column-number-mode t)
 (setq make-backup-files nil)
 (setq blink-cursor-interval 0.6)
-(require 'wc-mode)
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 4)
 (setq indent-line-function 'insert-tab)
-
-;; Suggested setting
-(global-set-key "\C-cw" 'wc-mode)
+;; remember where I was
 (save-place-mode 1)
 
+;; set mouse cursor
+;; mouse scrolling in terminal emacs
+(unless (display-graphic-p)
+        ;; activate mouse-based scrolling
+        (xterm-mouse-mode 1)
+        (global-set-key (kbd "<mouse-4>") 'scroll-down-line)
+        (global-set-key (kbd "<mouse-5>") 'scroll-up-line))
+
+;;wc-mode
+(require 'wc-mode)
+(global-set-key "\C-cw" 'wc-mode)
+
 ;; dashboard
-(require 'dashboard)
-(dashboard-setup-startup-hook)
-;; Or if you use use-package
 (use-package dashboard
   :ensure t
   :config
   (dashboard-setup-startup-hook))
-
 (setq dashboard-center-content t)
 ;; To disable shortcut "jump" indicators for each section, set
 (setq dashboard-show-shortcuts nil)
-
 (setq dashboard-items '((recents  . 5)
                         (bookmarks . 5)
                         (registers . 5)))
-
 (setq dashboard-set-heading-icons t)
 (setq dashboard-set-file-icons t)
 (setq dashboard-set-navigator t)
@@ -70,7 +90,6 @@
 (setq dashboard-item-names '(("Recent Files:" . "Zuletzt geöffnet:")
                              ("Bookmarks:" . "Lesezeichen")
                              ("Registers:" . "Register:")))
-
 ;; deft
 (require 'deft)
 (setq deft-extensions '("txt" "tex" "org" "md"))
@@ -99,11 +118,9 @@
   (setq gcmh-idle-delay 5
         gcmh-high-cons-threshold (* 16 1024 1024)) ; 16mb
   (gcmh-mode 1))
-
 (add-hook 'emacs-startup-hook
   (lambda ()
     (setq gc-cons-percentage 0.1))) ;; Default value for `gc-cons-percentage'
-
 (add-hook 'emacs-startup-hook
   (lambda ()
     (message "Emacs ready in %s with %d garbage collections."
@@ -140,7 +157,6 @@
 (setq xref-show-definitions-function #'xref-show-definitions-completing-read)
 
 ;; go-mode
-; "company" is auto-completion
 (require 'company)
 (require 'go-mode)
 (require 'company-go)
@@ -190,6 +206,21 @@
               :map md/leader-map
               ("Ni" . lsp-ui-imenu)))
 
+(add-hook 'javascript-mode-hook #'lsp)
+(lsp-treemacs-sync-mode 1)
+(define-key lsp-mode-map [remap xref-find-apropos] #'helm-lsp-workspace-symbol)
+
+;; Go - lsp-mode
+;; Set up before-save hooks to format buffer and add/delete imports.
+(defun lsp-go-install-save-hooks ()
+  (add-hook 'before-save-hook #'lsp-format-buffer t t)
+  (add-hook 'before-save-hook #'lsp-organize-imports t t))
+(add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+
+;; Start LSP Mode and YASnippet mode
+(add-hook 'go-mode-hook #'lsp-deferred)
+(add-hook 'go-mode-hook #'yas-minor-mode)
+
 ;;python
 (use-package pyvenv
   :ensure t
@@ -204,28 +235,13 @@
         (list (lambda ()
                 (setq python-shell-interpreter "python3")))))
 
-(add-hook 'javascript-mode-hook #'lsp)
-
-(lsp-treemacs-sync-mode 1)
-
-(define-key lsp-mode-map [remap xref-find-apropos] #'helm-lsp-workspace-symbol)
-
 ;;yasnippet
 (require 'yasnippet)
 (yas-global-mode 1)
 
-
 ;; Discover my major
 (global-set-key (kbd "C-h C-m") 'discover-my-major)
 (global-set-key (kbd "C-h M-m") 'discover-my-mode)
-
-;; set mouse cursor
-;;;; Mouse scrolling in terminal emacs
-(unless (display-graphic-p)
-        ;; activate mouse-based scrolling
-        (xterm-mouse-mode 1)
-        (global-set-key (kbd "<mouse-4>") 'scroll-down-line)
-        (global-set-key (kbd "<mouse-5>") 'scroll-up-line))
 
 ;; orgami
 (require 'origami)
@@ -642,8 +658,6 @@
 (setq make-backup-files nil)
 (setq create-lockfiles nil)
 
-;;
-
 ;;helm-gopackage
 (autoload 'helm-go-package "helm-go-package") ;; Not necessary if using ELPA package
 (eval-after-load 'go-mode
@@ -806,42 +820,11 @@ With WITH-TYPES, ask for file types to search in."
 (setq company-idle-delay 0)
 (setq company-minimum-prefix-length 1)
 
-;; Go - lsp-mode
-;; Set up before-save hooks to format buffer and add/delete imports.
-(defun lsp-go-install-save-hooks ()
-  (add-hook 'before-save-hook #'lsp-format-buffer t t)
-  (add-hook 'before-save-hook #'lsp-organize-imports t t))
-(add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
-
-;; Start LSP Mode and YASnippet mode
-(add-hook 'go-mode-hook #'lsp-deferred)
-(add-hook 'go-mode-hook #'yas-minor-mode)
-
 ;;helm company
 (autoload 'helm-company "helm-company") ;; Not necessary if using ELPA package
 (eval-after-load 'company
   '(progn
      (define-key company-mode-map (kbd "C-:") 'helm-company)
      (define-key company-active-map (kbd "C-:") 'helm-company)))
-
-
-
-;;spacemacs theme
-(load-theme 'spacemacs-dark t)
-
-;; line numbers
-(global-display-line-numbers-mode t)
-
-;; line highlighting
-(global-hl-line-mode +1)
-
-;; autosave
-(setq backup-directory-alist
-  `((".*" . ,temporary-file-directory)))
-(setq auto-save-file-name-transforms
-  `((".*" ,temporary-file-directory t)))
-
-;; column numbers
-(setq column-number-mode t)
 
 ;; init.el ends here
