@@ -52,7 +52,7 @@
 (setq make-backup-files nil)
 (setq blink-cursor-interval 0.6)
 (setq-default indent-tabs-mode nil)
-(setq-default tab-width 4)
+(setq-default tab-width 2)
 (setq indent-line-function 'insert-tab)
 ;; remember where I was
 (save-place-mode 1)
