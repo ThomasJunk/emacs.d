@@ -144,6 +144,7 @@
 
 ;; all the icons
 (require 'all-the-icons)
+(add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
 
 ;; flycheck
 (require 'flycheck)
