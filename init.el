@@ -328,11 +328,6 @@
 (add-hook 'org-mode-hook 'org-appear-mode)
 (setq org-ellipsis "⤵")
 
-;;org-ql
-(use-package org-ql
-  :quelpa (org-ql :fetcher github :repo "alphapapa/org-ql"
-                  :files (:defaults (:exclude "helm-org-ql.el"))))
-
 ;; Improve org mode looks
 (setq org-startup-indented t
   org-pretty-entities t
@@ -407,7 +402,7 @@
 (require 'org-superstar)
 (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
 (setq
-  org-superstar-headline-bullets-list '("❀" "⁕" "★" "☆" "✦"))
+  org-superstar-headline-bullets-list '("❃" "✱" "❋" "❈" "✸" "⁕" "✶" "✦" ))
 
 ;;magit
 (use-package magit
