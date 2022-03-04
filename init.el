@@ -139,9 +139,6 @@
 ;; olivetti
 (require 'olivetti)
 
-;; Autosave on focus change
-(add-hook 'focus-out-hook 'save-buffer)
-
 ;; all the icons
 (require 'all-the-icons)
 (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
