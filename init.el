@@ -21,6 +21,10 @@
 (when (equal emacs-version "27.2")
       (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3"))
 
+;; dired-fix
+(when (string= system-type "darwin")       
+  (setq dired-use-ls-dired nil))
+
 ;; use-package to simplify the config file
 (unless (package-installed-p 'use-package)
         (package-refresh-contents)
