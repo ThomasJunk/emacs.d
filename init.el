@@ -40,8 +40,8 @@
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
 (defalias 'yes-or-no-p 'y-or-n-p)
-;;spacemacs theme
-(load-theme 'spacemacs-dark t)
+;;theme
+(load-theme 'github t)
 ;; line numbers
 (global-display-line-numbers-mode t)
 ;; line highlighting
