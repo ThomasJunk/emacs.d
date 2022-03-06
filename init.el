@@ -40,7 +40,7 @@
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
 (defalias 'yes-or-no-p 'y-or-n-p)
-;;theme
+;;spacemacs theme
 (load-theme 'spacemacs-dark t)
 ;; line numbers
 (global-display-line-numbers-mode t)
@@ -164,6 +164,8 @@
 (require 'go-mode)
 (require 'company-go)
 (require 'go-autocomplete)
+(require 'auto-complete-config)
+(ac-config-default)
 
 ;;lspmode
 ;; if you want to change prefix for lsp-mode keybindings.
@@ -210,6 +212,18 @@
 (add-hook 'javascript-mode-hook #'lsp)
 (lsp-treemacs-sync-mode 1)
 (define-key lsp-mode-map [remap xref-find-apropos] #'helm-lsp-workspace-symbol)
+
+;; haskell
+(use-package lsp-haskell
+  :ensure t
+  :config
+ (setq lsp-haskell-server-path "haskell-language-server-wrapper")
+ (setq lsp-haskell-server-args ())
+   ;; Comment/uncomment this line to see interactions between lsp client/server.
+ (setq lsp-log-io t))
+
+;;haskell snippets
+(require 'haskell-snippets)
 
 ;; Go - lsp-mode
 ;; Set up before-save hooks to format buffer and add/delete imports.
@@ -279,7 +293,11 @@
 (require 'neotree)
 (global-set-key [f8] 'neotree-toggle)
 (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
-(re
+
+;;auto-complete
+(use-package auto-complete
+  :ensure t)
+
 ;;web-mode
 (use-package web-mode
   :ensure t
