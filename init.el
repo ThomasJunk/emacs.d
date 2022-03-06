@@ -41,7 +41,7 @@
 (scroll-bar-mode -1)
 (defalias 'yes-or-no-p 'y-or-n-p)
 ;;theme
-(load-theme 'github t)
+(load-theme 'spacemacs-dark t)
 ;; line numbers
 (global-display-line-numbers-mode t)
 ;; line highlighting
@@ -164,8 +164,6 @@
 (require 'go-mode)
 (require 'company-go)
 (require 'go-autocomplete)
-(require 'auto-complete-config)
-(ac-config-default)
 
 ;;lspmode
 ;; if you want to change prefix for lsp-mode keybindings.
@@ -281,11 +279,7 @@
 (require 'neotree)
 (global-set-key [f8] 'neotree-toggle)
 (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
-
-;;auto-complete
-(use-package auto-complete
-  :ensure t)
-
+(re
 ;;web-mode
 (use-package web-mode
   :ensure t
