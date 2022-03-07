@@ -344,6 +344,9 @@
 ;; org-mode agendafiles
 (setq org-agenda-files (list "/Users/thomasjunk/Documents/org/slimlist.org"))
 
+;; ox-reveal
+(require 'ox-reveal)
+(setq org-reveal-root "file:////home/tjunk/reveal.js")
 ;;ox-pandoc
 ;; default options for all output formats
 (setq org-pandoc-options '((standalone . t)))
