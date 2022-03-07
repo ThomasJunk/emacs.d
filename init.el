@@ -193,13 +193,11 @@
    (lsp-mode . lsp-enable-which-key-integration)))
 
 (with-eval-after-load 'lsp-mode
-  (add-to-list 'lsp-file-watch-ignored-directories '("[/\\\\]\\.node_modules\\'"
-                                                     "[/\\\\]\\.hg\\'"
-                                                     "[/\\\\]\\.git\\'"
-                                                     ) )
+(add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\node_modules\\'")
   ;; or
   ;;(add-to-list 'lsp-file-watch-ignored-files "[/\\\\]\\.my-files\\'"))
 )
+(setq lsp-file-watch-threshold 2000)
 
 (use-package lsp-ui
   :config (setq lsp-ui-sideline-show-hover t
