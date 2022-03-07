@@ -365,6 +365,9 @@
                              "/home/tjunk/Dokumente/arbeit/org/jmd.org"))
 
 
+;; ox-reveal
+(require 'ox-reveal)
+(setq org-reveal-root "file:////home/tjunk/reveal.js")
 ;;ox-pandoc
 ;; default options for all output formats
 (setq org-pandoc-options '((standalone . t)))
