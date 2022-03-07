@@ -192,6 +192,15 @@
   ((python-mode . lsp)
    (lsp-mode . lsp-enable-which-key-integration)))
 
+(with-eval-after-load 'lsp-mode
+  (add-to-list 'lsp-file-watch-ignored-directories '("[/\\\\]\\.node_modules\\'"
+                                                     "[/\\\\]\\.hg\\'"
+                                                     "[/\\\\]\\.git\\'"
+                                                     ) )
+  ;; or
+  ;;(add-to-list 'lsp-file-watch-ignored-files "[/\\\\]\\.my-files\\'"))
+)
+
 (use-package lsp-ui
   :config (setq lsp-ui-sideline-show-hover t
                 lsp-ui-sideline-delay 0.5
@@ -646,6 +655,48 @@
 (define-key minibuffer-local-map (kbd "C-c C-l") 'helm-minibuffer-history)
 
 (helm-mode 1)
+
+;;helm-ag
+;;(setq helm-ag-base-command "rg --vimgrep --no-heading --smart-case")
+
+(setq helm--ag-base-command (concat "rg"
+                                   " --color=never"
+                                   " --smart-case"
+                                   " --no-heading"
+                                   " --line-number %s %s %s")
+      helm-grep-file-path-style 'relative)
+(defun mu-helm-rg (directory &optional with-types)
+  "Search in DIRECTORY with RG.
+With WITH-TYPES, ask for file types to search in."
+  (interactive "P")
+  (require 'helm-adaptive)
+  (helm-grep-ag-1 (expand-file-name directory)
+                  (helm-aif (and with-types
+                                 (helm-grep-ag-get-types))
+                      (helm-comp-read
+                       "RG type: " it
+                       :must-match t
+                       :marked-candidates t
+                       :fc-transformer 'helm-adaptive-sort
+                       :buffer "*helm rg types*"))))
+(defun mu-helm-project-search (&optional with-types)
+  "Search in current project with RG.
+With WITH-TYPES, ask for file types to search in."
+  (interactive "P")
+  (mu-helm-rg (mu--project-root) with-types))
+
+(defun mu-helm-file-search (&optional with-types)
+  "Search in `default-directory' with RG.
+With WITH-TYPES, ask for file types to search in."
+  (interactive "P")
+  (mu-helm-rg default-directory with-types))
+
+(defun mu--project-root ()
+  "Return the project root directory or `helm-current-directory'."
+  (require 'helm-ls-git)
+  (if-let (dir (helm-ls-git-root-dir))
+      dir
+    (helm-current-directory)))
 
 ;;helm-tramp
 (setq tramp-default-method "ssh")
