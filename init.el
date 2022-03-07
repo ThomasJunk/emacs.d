@@ -213,18 +213,6 @@
 (lsp-treemacs-sync-mode 1)
 (define-key lsp-mode-map [remap xref-find-apropos] #'helm-lsp-workspace-symbol)
 
-;; haskell
-(use-package lsp-haskell
-  :ensure t
-  :config
- (setq lsp-haskell-server-path "haskell-language-server-wrapper")
- (setq lsp-haskell-server-args ())
-   ;; Comment/uncomment this line to see interactions between lsp client/server.
- (setq lsp-log-io t))
-
-;;haskell snippets
-(require 'haskell-snippets)
-
 ;; Go - lsp-mode
 ;; Set up before-save hooks to format buffer and add/delete imports.
 (defun lsp-go-install-save-hooks ()
