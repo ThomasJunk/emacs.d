@@ -283,6 +283,7 @@
     (setq js-indent-level 2)))
 
 ;;prettier
+(add-hook 'js2-mode-hook 'prettier-js-mode)
 (add-hook 'web-mode-hook 'prettier-js-mode)
 
 (defun enable-minor-mode (my-pair)
