@@ -865,6 +865,11 @@ With WITH-TYPES, ask for file types to search in."
 (setq company-idle-delay 0)
 (setq company-minimum-prefix-length 1)
 
+(defun disable-company ()
+  (interactive)
+  (company-mode -1))
+(add-hook 'web-mode-hook #'disable-company)
+
 ;;helm company
 (autoload 'helm-company "helm-company") ;; Not necessary if using ELPA package
 (eval-after-load 'company
