@@ -159,14 +159,6 @@
 (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
 (setq xref-show-definitions-function #'xref-show-definitions-completing-read)
 
-;; go-mode
-(require 'company)
-(require 'go-mode)
-(require 'company-go)
-(require 'go-autocomplete)
-(require 'auto-complete-config)
-(ac-config-default)
-
 ;;lspmode
 ;; if you want to change prefix for lsp-mode keybindings.
 (setq lsp-keymap-prefix "s-l")
@@ -724,11 +716,6 @@ With WITH-TYPES, ask for file types to search in."
 (setq make-backup-files nil)
 (setq create-lockfiles nil)
 
-;;helm-gopackage
-(autoload 'helm-go-package "helm-go-package") ;; Not necessary if using ELPA package
-(eval-after-load 'go-mode
-  '(substitute-key-definition 'go-import-add 'helm-go-package go-mode-map))
-
 ;;helm-flycheck
 (require 'helm-flycheck) ;; Not necessary if using ELPA package
 (eval-after-load 'flycheck
@@ -881,8 +868,6 @@ With WITH-TYPES, ask for file types to search in."
   '(add-to-list 'company-backends 'company-ghc))
 
 (setq company-dabbrev-downcase 0)
-(setq company-idle-delay 0)
-
 (setq company-idle-delay 0)
 (setq company-minimum-prefix-length 1)
 
