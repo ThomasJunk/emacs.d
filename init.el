@@ -295,10 +295,6 @@
 (global-set-key [f8] 'neotree-toggle)
 (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
 
-;;auto-complete
-(use-package auto-complete
-  :ensure t)
-
 ;;web-mode
 (use-package web-mode
   :ensure t
@@ -421,26 +417,6 @@
 (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
 (setq
   org-superstar-headline-bullets-list '("❃" "✱" "❋" "❈" "✸" "⁕" "✶" "✦" ))
-
-;;magit
-(use-package magit
-  :ensure t
-  :config (setq magit-display-buffer-function ;; Make Magit Fullscreen
-                (lambda (buffer)
-                  (if magit-display-buffer-noselect
-                      ;; the code that called `magit-display-buffer-function'
-                      ;; expects the original window to stay alive, we can't go
-                      ;; fullscreen
-                      (magit-display-buffer-traditional buffer)
-                      (delete-other-windows)
-                      ;; make sure the window isn't dedicated, otherwise
-                      ;; `set-window-buffer' throws an error
-                      (set-window-dedicated-p nil nil)
-                      (set-window-buffer nil buffer)
-                      ;; return buffer's window
-                      (get-buffer-window buffer)))))
-
-(global-set-key "\C-xg" 'magit-status)
 
 ;;doom-modeline
 (use-package doom-modeline
@@ -606,7 +582,6 @@
 (custom-set-faces
   '(mode-line ((t (:family "Noto Sans" :height 0.9))))
   '(mode-line-inactive ((t (:family "Noto Sans" :height 0.9)))))
-
 
 ;;helm
 (require 'helm)
@@ -820,47 +795,6 @@ With WITH-TYPES, ask for file types to search in."
 
 (setq helm-semantic-fuzzy-match t
   helm-imenu-fuzzy-match t)
-
-;;helm ripgrep
-(setq helm-grep-ag-command (concat "rg"
-                                   " --color=never"
-                                   " --smart-case"
-                                   " --no-heading"
-                                   " --line-number %s %s %s")
-  helm-grep-file-path-style 'relative)
-(defun mu-helm-rg (directory &optional with-types)
-  "Search in DIRECTORY with RG.
-With WITH-TYPES, ask for file types to search in."
-  (interactive "P")
-  (require 'helm-adaptive)
-  (helm-grep-ag-1 (expand-file-name directory)
-                  (helm-aif (and with-types
-                                 (helm-grep-ag-get-types))
-                            (helm-comp-read
-                             "RG type: " it
-                             :must-match t
-                             :marked-candidates t
-                             :fc-transformer 'helm-adaptive-sort
-                             :buffer "*helm rg types*"))))
-
-(defun mu-helm-project-search (&optional with-types)
-  "Search in current project with RG.
-With WITH-TYPES, ask for file types to search in."
-  (interactive "P")
-  (mu-helm-rg (mu--project-root) with-types))
-
-(defun mu-helm-file-search (&optional with-types)
-  "Search in `default-directory' with RG.
-With WITH-TYPES, ask for file types to search in."
-  (interactive "P")
-  (mu-helm-rg default-directory with-types))
-
-(defun mu--project-root ()
-  "Return the project root directory or `helm-current-directory'."
-  (require 'helm-ls-git)
-  (if-let (dir (helm-ls-git-root-dir))
-          dir
-          (helm-current-directory)))
 
 ;; company mode
 (add-hook 'after-init-hook 'global-company-mode)
