@@ -21,6 +21,12 @@
 (when (equal emacs-version "27.2")
       (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3"))
 
+;; emojis
+(set-fontset-font t 'symbol "Apple Color Emoji")
+(set-fontset-font t 'symbol "Noto Color Emoji" nil 'append)
+(set-fontset-font t 'symbol "Segoe UI Emoji" nil 'append)
+(set-fontset-font t 'symbol "Symbola" nil 'append)
+
 ;; dired-fix
 (when (string= system-type "darwin")       
   (setq dired-use-ls-dired nil))
