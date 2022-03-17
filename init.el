@@ -312,6 +312,7 @@
 
 ;; undotree
 (global-undo-tree-mode)
+(setq undo-tree-auto-save-history nil)
 
 ;;projectile
 (use-package projectile
