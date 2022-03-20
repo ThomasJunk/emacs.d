@@ -48,8 +48,7 @@
 (defalias 'yes-or-no-p 'y-or-n-p)
 ;;spacemacs theme
 (load-theme 'spacemacs-dark t)
-;; line numbers
-(global-display-line-numbers-mode t)
+
 ;; line highlighting
 (global-hl-line-mode +1)
 ;; autosave
