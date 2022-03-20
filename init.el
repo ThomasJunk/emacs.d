@@ -145,6 +145,7 @@
   :ensure t
   :mode ("README\\.md\\'" . gfm-mode)
   :init (setq markdown-command "multimarkdown"))
+(add-hook 'markdown-mode-hook 'olivetti-mode)
 
 ;; olivetti
 (require 'olivetti)
